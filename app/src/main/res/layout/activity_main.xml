@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.sunxiaodong.viewpager.MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/go_pager_adapter"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:text="goPagerAdapter"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/go_fragment_pager_adapter"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="goFragmentPagerAdapter"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/go_fragment_state_pager_adapter"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="goFragmentStatePagerAdapter"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+</RelativeLayout>
