@@ -1,5 +1,6 @@
 package com.example.sunxiaodong.viewpager;
 
+import android.animation.ArgbEvaluator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.sunxiaodong.viewpager.fragment.BaseFragment;
+import com.example.sunxiaodong.viewpager.fragment.MyFiveFragment;
+import com.example.sunxiaodong.viewpager.fragment.MyFourFragment;
+import com.example.sunxiaodong.viewpager.fragment.MyOneFragment;
+import com.example.sunxiaodong.viewpager.fragment.MyThreeFragment;
+import com.example.sunxiaodong.viewpager.fragment.MyTwoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +41,8 @@ public class FragmentPagerAdapterActivity extends AppCompatActivity implements V
     private EditText mEditText;
     private Button mButton;
 
+    private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +58,11 @@ public class FragmentPagerAdapterActivity extends AppCompatActivity implements V
         mButton.setOnClickListener(this);
 
         List<Fragment> fragments = new ArrayList<Fragment>();
-        Fragment fragment1 = MyFragment.newInstance(1);
-        Fragment fragment2 = MyFragment.newInstance(2);
-        Fragment fragment3 = MyFragment.newInstance(3);
-        Fragment fragment4 = MyFragment.newInstance(4);
-        Fragment fragment5 = MyFragment.newInstance(5);
-
+        Fragment fragment1 = MyOneFragment.newInstance();
+        Fragment fragment2 = MyTwoFragment.newInstance();
+        Fragment fragment3 = MyThreeFragment.newInstance();
+        Fragment fragment4 = MyFourFragment.newInstance();
+        Fragment fragment5 = MyFiveFragment.newInstance();
 
         fragments.add(fragment1);
         fragments.add(fragment2);
@@ -63,6 +72,7 @@ public class FragmentPagerAdapterActivity extends AppCompatActivity implements V
 
         mMyFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(mMyFragmentPagerAdapter);
+        mViewPager.setPageTransformer(true, new FragmentTransformer());//设置页面变换监听，对每个页面的变化都有一个变换的监听
         mViewPager.addOnPageChangeListener(new OnMyPageChangeListener());//页面变化监听
         mViewPager.setOffscreenPageLimit(2);//设置缓存页面数。当前页，左右两边（单边）最大缓存页面数。
 //        mViewPager.setOnScrollChangeListener(new OnMyScrollChangeListener());//滚动状态监听，minSdkVersion：23
@@ -112,6 +122,12 @@ public class FragmentPagerAdapterActivity extends AppCompatActivity implements V
             //positionOffset:当前页面滑动比例，如果页面向右翻动，这个值不断变大，最后在趋近1的情况后突变为0。如果页面向左翻动，这个值不断变小，最后变为0。
             //positionOffsetPixels:当前页面滑动像素，变化情况和positionOffset一致。
             Log.i(TAG, NAME + "--onPageScrolled++position:" + position + ",++positionOffset:" + positionOffset + ",++positionOffsetPixels:" + positionOffsetPixels);
+            int nextColorPosition = position + 1;
+            if (position < (mMyFragmentPagerAdapter.getCount() - 1)) {
+                mViewPager.setBackgroundColor((Integer) argbEvaluator.evaluate(positionOffset, ((BaseFragment)(mMyFragmentPagerAdapter.getItem(position))).getPageBgColor(), ((BaseFragment)(mMyFragmentPagerAdapter.getItem(nextColorPosition))).getPageBgColor()));
+            } else if (position == mMyFragmentPagerAdapter.getCount() - 1) {
+                mViewPager.setBackgroundColor(((BaseFragment)(mMyFragmentPagerAdapter.getItem(position))).getPageBgColor());
+            }
         }
 
         @Override
@@ -180,6 +196,24 @@ public class FragmentPagerAdapterActivity extends AppCompatActivity implements V
             Log.i(TAG, NAME + "--getCount++");
             return mFragments.size();
         }
+    }
+
+    /**
+     * 界面变换监听
+     */
+    class FragmentTransformer implements ViewPager.PageTransformer {
+
+        @Override
+        public void transformPage(View page, float position) {
+            //page:为当前变换的界面，每切换一次页面，所有当前attach的页面都会执行页面变换回调
+            //position:为当前页面position位置的不断变化回调值
+            Object obj = page.getTag(R.id.st_fragment);
+            if (obj instanceof BaseFragment) {
+                ((BaseFragment) obj).transformPage(page, position);
+            }
+//            Log.i(TAG, NAME + "--FragmentTransformer++transformPage++position:" + position);
+        }
+
     }
 
 }

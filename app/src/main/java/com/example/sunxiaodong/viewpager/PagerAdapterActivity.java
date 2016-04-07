@@ -64,7 +64,7 @@ public class PagerAdapterActivity extends AppCompatActivity implements View.OnCl
 //        mViewPager.onSaveInstanceState();
 //        mViewPager.setPageTransformer();
         mMyPagerAdapter.notifyDataSetChanged();//当适配器数据集更改时，调用通知UI更改。PagerAdapter.notifyDataSetChanged() 被触发时，
-        // ViewPager.dataSetChanged() 也会被触发。该函数将使用 getItemPosition() 的返回值来进行判断，如果为 POSITION_UNCHANGED，
+//         ViewPager.dataSetChanged() 也会被触发。该函数将使用 getItemPosition() 的返回值来进行判断，如果为 POSITION_UNCHANGED，
         // 则什么都不做；如果为 POSITION_NONE，则调用 PagerAdapter.destroyItem() 来去掉该对象，
         // 并设置为需要刷新 (needPopulate = true) 以便触发 PagerAdapter.instantiateItem() 来生成新的对象。
         setPageNum(0);//设置显示首页
